@@ -15,4 +15,12 @@
 运行 
 直接用AS运行即可
 
+点击打开按钮，在文件浏览器上选择要分析的aac碼流文件,选择的文件路径会在软件界面编辑框上显示出来，界面如下
+![dsaf](Selection_017.png);
+
+点击打开按钮，在文件浏览器上选择要分析的mp4碼流文件,选择的文件路径会在软件界面编辑框上显示出来，界面如下
+![dsaf](Selection_016.png);
+
+附加上aac碼流文件JustOneLastDance_short.aac和MP4文件JustOneLastDance.m4a，测试时将它拷贝到手机上即可
+
 
