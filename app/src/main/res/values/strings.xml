@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">AacAnalysisAndroid</string>
+    <string name="titleName">AAC Analysis</string>
+    <string name="filePath_tv">File Path:</string>
+    <string name="open_file_tips">Please select a input acc file!</string>
+    <string name="start_btn">Start</string>
+    <string name="about_btn">About</string>
+    <string name="exit_btn">Close</string>
+    <string name="open_btn">Open</string>
+    <string name="basicinfo_tv">Basic Information</string>
+    <string name="limit_cb">Limit 5000 numbers</string>
+    <string name="audioframe_tv">Audio Frame List</string>
+    <string name="output_option_tv">Output Options</string>
+    <string name="outout_format_tv">Format:</string>
+    <string name="output_sample_rate_tv">Accuracy:</string>
+    <string name="progress_tv">Progress:</string>
+    <string name="container_tv">Container Information</string>
+    <string name="matedata_tv">MetaData Information</string>
+    <string name="nalempty_tv">什么都没有哦~</string>
+    <string name="file_select_tool_tips">请安装文件管理器</string>
+    <string name="file_read_permission_tips">请开启文件读取权限</string>
+    <string name="parse_file_tips">选择的文件必须是aac碼流文件</string>
+    <string name="loading">玩命加载中...</string>
+    <string name="index_tv">Index</string>
+    <string name="size_tv">Size(B)</string>
+    <string name="sampleNum_tv">Sample Num</string>
+    <string name="duration_tv">Duration</string>
+    <string name="about_info">本项目主要可以用来学习AAC码流结构.AAC文件就是不经封装的音频流,M4A文件就是以MPEG-4标准的封装格式进行封装的AAC,使用一个AAC的开源解码器faad2解码AAC帧.</string>
+</resources>
