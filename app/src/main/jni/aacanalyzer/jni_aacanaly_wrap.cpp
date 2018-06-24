@@ -247,12 +247,6 @@ jint JNI_decodeMp4file(JNIEnv *env,jclass jcls __unused,jlong jcPtr,jstring jmp4
     return 0;
 }
 
-void JNI_setCheckBox(JNIEnv *env,jclass jcls __unused,jlong jcPtr,jboolean jisCheck,jint jshowNalCount)
-{
-    AacDecode* pAacDec = reinterpret_cast<AacDecode *> (jcPtr);
-    pAacDec->setCheckBox((bool)jisCheck,(int)jshowNalCount);
-}
-
 void JNI_stopFaad2Engine(JNIEnv *env,jclass jcls __unused,jlong jcPtr)
 {
     AacDecode* pAacDec = reinterpret_cast<AacDecode *> (jcPtr);
@@ -264,7 +258,6 @@ static JNINativeMethod gMethods[] = {
         { "startFaad2Engine","(Ljava/lang/String;)J",(void*)JNI_startFaad2Engine},
         { "decodeAACfile","(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;IIIIIIIII)I",(void*)JNI_decodeAacfile},
         { "decodeMP4file","(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;IIIIIII)I",(void*)JNI_decodeMp4file},
-        { "setCheckBox","(JZI)V",(void*)JNI_setCheckBox},
         { "stopFaad2Engine","(J)V",(void*)JNI_stopFaad2Engine},
 };
 

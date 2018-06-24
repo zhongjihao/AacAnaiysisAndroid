@@ -72,7 +72,7 @@
 //        NULL
 //};
 
-AacDecode::AacDecode() : checkBoxNal(false),showAdtsCount(0),countIndex(0)
+AacDecode::AacDecode()
 {
     unsigned long cap = NeAACDecGetCapabilities();
 
@@ -95,7 +95,7 @@ AacDecode::AacDecode() : checkBoxNal(false),showAdtsCount(0),countIndex(0)
     memcpy(this->progName,"Faad2-Android",strlen("Faad2-Android"));
 }
 
-AacDecode::AacDecode(const char* proName) : checkBoxNal(false),showAdtsCount(0),countIndex(0)
+AacDecode::AacDecode(const char* proName)
 {
     unsigned long cap = NeAACDecGetCapabilities();
 
@@ -130,12 +130,6 @@ AacDecode::~AacDecode()
 void AacDecode::setBasicInfoCallback(void (*func)(map<string, string>& containerInfo,map<string, string>& metaDataInfo))
 {
     this->pBasicAudioInfoFunc = func;
-}
-
-void AacDecode::setCheckBox(bool isCheck,int showNalCount)
-{
-    this->showAdtsCount = showNalCount;
-    this->checkBoxNal = isCheck;
 }
 
 void AacDecode::setProgressCallback(void (*func)(int progressPercent))
@@ -757,10 +751,7 @@ int AacDecode::decodeAACfile(char *aacfile, char *sndfile, char *adts_fn, int to
 
         percent = min((int)(b.file_offset*100)/fileread, 100);
 
-        if(checkBoxNal && countIndex++ < showAdtsCount)
-            (*pAacFrameFunc)(pAacFrame);
-        if(!checkBoxNal)
-            (*pAacFrameFunc)(pAacFrame);
+        (*pAacFrameFunc)(pAacFrame);
 
         if (percent > old_percent)
         {
@@ -1212,10 +1203,7 @@ int AacDecode::decodeMP4file(char *mp4file, char *sndfile, char *adts_fn, int to
 
         percent = min((int)(sampleId*100)/numSamples, 100);
 
-        if(checkBoxNal && countIndex++ < showAdtsCount)
-            (*pAacFrameFunc)(pAacFrame);
-        if(!checkBoxNal)
-            (*pAacFrameFunc)(pAacFrame);
+        (*pAacFrameFunc)(pAacFrame);
 
         if (percent > old_percent)
         {
@@ -1304,7 +1292,6 @@ int AacDecode::decodeAACfile(const char *aacfile, const char *outfile, const cha
     fread(header, 1, 2, hAacFile);
     fclose(hAacFile);
     containerInfo.clear();
-    countIndex = 0;
     if (header[0] == 0xFF && (header[1] & 0xF0 == 0xF0)){
         containerInfo.insert(make_pair("Container", "RAW Format"));
         result = decodeAACfile(const_cast<char*>(aacfile), const_cast<char*>(outfile), const_cast<char*>(adts_fn), to_stdout,
@@ -1373,7 +1360,6 @@ int AacDecode::decodeMP4file(const char *mp4file, const char *outfile, const cha
     fread(header, 1, 8, hMP4File);
     fclose(hMP4File);
     containerInfo.clear();
-    countIndex = 0;
     if (header[4] == 'f' && header[5] == 't' && header[6] == 'y' && header[7] == 'p'){
         containerInfo.insert(make_pair("Container", "MP4 Container Format"));
         result = decodeMP4file(const_cast<char*>(mp4file), const_cast<char*>(outfile),const_cast<char*>(adts_fn), to_stdout,

@@ -28,13 +28,6 @@ public class AacDecodeWrap {
         cPtr = AacAnalyzeNativeJni.startFaad2Engine(proName);
     }
 
-    //checkBox选择事件
-    public void setCheckBox(boolean isCheck,int showNaluNumber) {
-        if (cPtr != 0) {
-            AacAnalyzeNativeJni.setCheckBox(cPtr, isCheck,showNaluNumber);
-        }
-    }
-
     //解码AAC文件
     public int decodeAacFile(String aacfile,String outfile,String adts_fn,int to_stdout,int def_srate,int object_type,int outputFormat, int fileType,
                              int downMatrix, int infoOnly, int adts_out, int old_format) {

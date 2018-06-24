@@ -37,7 +37,6 @@ public class AacAnalyzeNativeJni {
     */
     public native static int decodeAACfile(long cPtr,String aacfile,String outfile,String adts_fn,int to_stdout,int def_srate,int object_type,int outputFormat, int fileType,
                                            int downMatrix, int infoOnly, int adts_out, int old_format);
-    public native static void setCheckBox(long cPtr,boolean isCheck,int showNalNumber);
 
     /* mp4file : 要解码的mp4源文件
      * outfile : 解码输出的文件

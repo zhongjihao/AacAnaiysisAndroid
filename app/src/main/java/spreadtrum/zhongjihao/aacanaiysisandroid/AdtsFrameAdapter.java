@@ -66,7 +66,7 @@ public class AdtsFrameAdapter extends BaseAdapter {
         viewHoder.number_tv.setText(String.valueOf(position));
         viewHoder.size_tv.setText(String.valueOf(dataList.get(position).getSize()));
         viewHoder.sampleNum_tv.setText(String.valueOf(dataList.get(position).getSampleNum()));
-        viewHoder.duration_tv.setText(dataList.get(position).getDuration()+"ms");
+        viewHoder.duration_tv.setText(position == 0 ? "0ms":dataList.get(position).getDuration()+"ms");
 
         return convertView;
     }

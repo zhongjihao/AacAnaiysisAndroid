@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
@@ -17,12 +18,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -34,13 +35,11 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -84,6 +83,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final String[] outfileFormatStr = new String[]{"Microsoft WAV format","RAW PCM data"};
     private final String[] sampleAccuracyStr = new String[]{"16 bit PCM data","24 bit PCM data","32 bit PCM data","32 bit floating point data","64 bit floating point data"};
 
+    private int showAdtsFrameNum;
+    private boolean isCheck;
+    private boolean isReachLimite;
     // 群组名称（一级条目内容）
     private String[] aacInfoGroup = new String[]{"MetaData Information","Container Information"};
     private WorkerHandler msgHandler;
@@ -159,7 +161,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case AAC_FRAME_INFO:
 //                    act.hor_pbar.setProgress(msg.arg1);
 //                    act.progress_val_tv.setText(msg.arg1+"%");
-                    act.mAacFrameList.addAll(act.mAacTempFrameList);
+                    if (act.isCheck) {
+                        if (act.mAacFrameList.size() < act.showAdtsFrameNum) {
+                            act.mAacFrameList.addAll(act.mAacTempFrameList);
+                            if (act.showAdtsFrameNum < act.mAacFrameList.size()) {
+                                Log.e("MainActivity","=1==zhongjihao====Array: "+act.mAacFrameList.size()+"    showAdtsFrameNum "+act.showAdtsFrameNum);
+                                act.isReachLimite = true;
+                            }
+                        }
+                    } else {
+                        act.mAacFrameList.addAll(act.mAacTempFrameList);
+                    }
+                    if(act.isReachLimite){
+                       // List sublist = act.mAacFrameList.subList(act.showAdtsFrameNum, act.mAacFrameList.size()-1);
+                        ArrayList<AudioFrame> sublist = new ArrayList(act.mAacFrameList.subList(act.showAdtsFrameNum, act.mAacFrameList.size()));
+                        Log.e("MainActivity","==2===zhongjihao====Array: "+act.mAacFrameList.size()+"    showAdtsFrameNum "+act.showAdtsFrameNum);
+                        act.mAacFrameList.removeAll(sublist);
+                        Log.e("MainActivity","==3===zhongjihao====Array: "+act.mAacFrameList.size()+"    showAdtsFrameNum "+act.showAdtsFrameNum);
+                    }
                     if (act.adtsFrameAdapter == null) {
                         act.adtsFrameAdapter = new AdtsFrameAdapter(act, act.mAacFrameList, R.layout.adts_frame_item);
                         act.adts_lv.setAdapter(act.adtsFrameAdapter);
@@ -214,12 +233,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String txt = totalAdts_cb.getText().toString();
                 Pattern pattern = Pattern.compile("\\d+");
                 Matcher matcher = pattern.matcher(txt);
-                String showNaluNumber = "";
+                String checkBoxShowNumber = "";
                 while (matcher.find()) {
-                    showNaluNumber = matcher.group(0);
+                    checkBoxShowNumber = matcher.group(0);
                 }
-                Log.d("MainActivity","====zhongjihao=======showNaluNumber: "+showNaluNumber);
-                AacDecodeWrap.newInstance().setCheckBox(isChecked,Integer.valueOf(showNaluNumber));
+                showAdtsFrameNum = Integer.valueOf(checkBoxShowNumber);
+                isCheck = isChecked;
+                Log.d("MainActivity","====zhongjihao=======checkBoxShowNumber: "+checkBoxShowNumber);
             }
         });
 
@@ -245,7 +265,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         permissions, TARGET_READ_PERMISSION_REQUEST);
             }
         }
-
     }
 
     private void outputOptionInit() {
@@ -311,6 +330,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mAacFrameList.clear();
                 metaDataList.clear();
                 mAacTempFrameList.clear();
+                isReachLimite = false;
                 msgHandler.removeMessages(AAC_BASIC_INFO);
                 msgHandler.removeMessages(AAC_FRAME_INFO);
                 Intent intent = new Intent(this,DecodeAacService.class);
@@ -421,7 +441,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 progress_val_tv.setText(pro+"%");
             }
         });
-        msgHandler.sendMessage(msg);
+        if(!isReachLimite)
+            msgHandler.sendMessage(msg);
     }
 
     @Override
@@ -430,7 +451,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // Get the Uri of the selected file
             Uri uri = data.getData();
             String url = FileUtils.getPathFromURI(this, uri);
-            Log.d("MainActivity", "===zhongjihao======aac path: " + url+"  uri: "+uri.toString());
+            Log.d("MainActivity", "===zhongjihao===onActivityResult===aac path: " + url+"  uri: "+uri.toString());
+           // Log.d("MainActivity","====zhongjihao===onActivityResult==="+ Environment.getExternalStorageDirectory().getAbsolutePath()+"/Movies/JustOneLastDance.m4a");
             // String fileName = url.substring(url.lastIndexOf("/") + 1);
             file_edit.setText(url);
         }

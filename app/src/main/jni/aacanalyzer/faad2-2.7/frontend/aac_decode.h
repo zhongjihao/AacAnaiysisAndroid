@@ -72,9 +72,6 @@ struct AudioFrame{
 class AacDecode
 {
 private:
-    bool checkBoxNal;      //标识checkBox是否被选择
-    int showAdtsCount;      //checkBox显示的adts frame数目
-    int countIndex;
     char progName[256];    //程序名
     map<string, string> containerInfo;
     map<string, string> metaDataInfo;
@@ -111,7 +108,6 @@ public:
     AacDecode();
     AacDecode(const char* proName);
     ~AacDecode();
-    void setCheckBox(bool isCheck,int showNalCount);
     void setBasicInfoCallback(void (*func)(map<string, string>& containerInfo,map<string, string>& metaDataInfo));
     void setAacFrameCallback(void (*func)(AudioFrame* aacFrame));
     void setProgressCallback(void (*func)(int progressPercent));
